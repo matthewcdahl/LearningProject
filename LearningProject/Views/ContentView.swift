@@ -17,7 +17,13 @@ struct ContentView: View {
         ScrollView{
             VStack{
                 ForEach(model.modules[moduleId].content.lessons){ lesson in
-                    LessonCardView(id: lesson.id, title: lesson.title, duration: lesson.duration)
+                    NavigationLink(destination: {
+                        ContentDetailView(lessonId: lesson.id, moduleId: moduleId)
+                    }, label: {
+                        LessonCardView(id: lesson.id + 1, title: lesson.title, duration: lesson.duration)
+                    })
+                        .foregroundColor(.black)
+                    
                 }
             }
         }

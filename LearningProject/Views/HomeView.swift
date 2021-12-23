@@ -20,9 +20,8 @@ struct HomeView: View {
                         .padding(.leading, 20)
                     LazyVStack(alignment: .leading, spacing: 10){
                         ForEach(model.modules){ m in
-                            NavigationLink(destination: {
-                                ContentView(moduleId: m.id)
-                            }, label: {
+                            
+                            NavigationLink(destination: ContentView(moduleId: m.id), tag: m.id, selection: $model.selectedIndex, label: {
                                 CardView(image: m.content.image,
                                          title: m.category + " Lessons",
                                          description: m.content.description,
@@ -48,6 +47,7 @@ struct HomeView: View {
                 }
             }
         }
+        .navigationViewStyle(.stack)
     }
 }
 
