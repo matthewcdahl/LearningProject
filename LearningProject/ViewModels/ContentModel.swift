@@ -12,6 +12,11 @@ class ContentModel: ObservableObject{
     @Published var modules = [Module]()
     var styleData: Data?
     @Published var selectedIndex: Int?
+    @Published var selectedTestIndex: Int?
+    
+    @Published var currentQuestion: Question?
+    var currentQuestionIndex: Int = 0
+    
     
     init(){
         modules = DataService.getLocalData()
@@ -54,6 +59,20 @@ class ContentModel: ObservableObject{
         }
         
         return attString
+    }
+    
+    func getNumberOfQuestions(moduleId: Int) -> Int{
+        return modules[moduleId].test.questions.count
+    }
+    
+    func trickUpdate(moduleId: Int, questionId: Int){
+        modules[moduleId].test.questions[questionId].answers.append("a")
+        modules[moduleId].test.questions[questionId].answers.removeLast()
+       
+    }
+    
+    func getLessonName(moduleId: Int, lessonId: Int) -> String{
+        return modules[moduleId].content.lessons[lessonId].title
     }
     
 }

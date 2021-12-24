@@ -31,7 +31,7 @@ struct HomeView: View {
                                          secondDescription: String(model.getTotalLessonTime(moduleIndex: m.id)) + " Minutes")
                                     .foregroundColor(.black)
                             })
-                            NavigationLink(destination: ContentView(moduleId: m.id), label: {
+                            NavigationLink(destination: TestView(currentModuleId: m.id, currentQuestionId: 0), tag: m.id, selection: $model.selectedTestIndex, label: {
                                 CardView(image: m.test.image,
                                          title: m.category + " Quiz",
                                          description: m.test.description,

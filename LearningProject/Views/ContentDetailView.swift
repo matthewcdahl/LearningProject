@@ -14,15 +14,18 @@ struct ContentDetailView: View {
     @EnvironmentObject var model: ContentModel
     @State var lessonId: Int
     @State var moduleId: Int
-
+    @State var lessonName: String = ""
     @State var url: URL?
     
     var body: some View {
+        
+        let player = AVPlayer(url: ((url ?? URL(string: "https://codewithchris.github.io/learningJSON/"))!))
+        
         VStack(alignment: .leading){
-            Text(model.modules[moduleId].content.lessons[lessonId].title)
+            /*Text(model.modules[moduleId].content.lessons[lessonId].title)
                 .bold()
-                .font(.largeTitle)
-            VideoPlayer(player: AVPlayer(url: ((url ?? URL(string: "https://codewithchris.github.io/learningJSON/"))!)))
+                .font(.largeTitle)*/
+            VideoPlayer(player: player)
                 .cornerRadius(10)
                 .shadow(radius: 5)
            
@@ -33,15 +36,13 @@ struct ContentDetailView: View {
             
             if(model.hasNextLesson(moduleIndex: moduleId, lessonIndex: lessonId)){
                 Button(action: {
+                    player.pause()
+                    url = URL(string: "https://codewithchris.github.io/learningJSON/" + (model.modules[moduleId].content.lessons[lessonId].video))
                     lessonId += 1
-                    url = URL(string: "https://codewithchris.github.io/learningJSON/" + (model.modules[moduleId].content.lessons[lessonId].video ?? ""))
+                    lessonName = model.getLessonName(moduleId: moduleId, lessonId: lessonId)
                 }, label: {
                     ZStack{
-                        Rectangle()
-                            .foregroundColor(.green)
-                            .cornerRadius(10)
-                            .frame(height: 70, alignment: .center)
-                            .shadow(radius: 5)
+                        MyRectangleView(color: .green)
                         Text("NEXT LESSON: " + model.modules[moduleId].content.lessons[lessonId+1].title)
                             .bold()
                             .foregroundColor(.white)
@@ -54,23 +55,19 @@ struct ContentDetailView: View {
                     model.selectedIndex = nil
                 }, label: {
                     ZStack{
-                        Rectangle()
-                            .foregroundColor(.blue)
-                            .cornerRadius(10)
-                            .frame(height: 70, alignment: .center)
-                            .shadow(radius: 5)
+                        MyRectangleView(color: .blue)
                         Text("Back to Home")
                             .bold()
                             .foregroundColor(.white)
-                            
                     }
                 })
             }
         }
         .onAppear(perform: {
-            url = URL(string: "https://codewithchris.github.io/learningJSON/" + (model.modules[moduleId].content.lessons[lessonId].video ?? ""))
+            url = URL(string: "https://codewithchris.github.io/learningJSON/" + (model.modules[moduleId].content.lessons[lessonId].video))
+            lessonName = model.getLessonName(moduleId: moduleId, lessonId: lessonId)
         })
-        .navigationBarHidden(true)
+        .navigationTitle(lessonName)
         .padding(.horizontal)
         
         
